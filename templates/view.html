@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+    </div>
+    
+</div>
+<div class="container">
+    <main>
+        <div class="row">
+            <div class="col-md-12 text-center mt-4">
+                <h1>Collection of Images</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab ad alias cumque deleniti dignissimos
+                    ducimus
+                    ea esse illo iure laudantium maiores minus numquam quae quasi reprehenderit saepe, suscipit, unde
+                    veritatis.</p>
+                </div>
+                <div class="col-md-12 text-center mt-2 ">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a href="/classify?p={{(data|last).0}}" class="btn btn-success shadow-lg btn-lg">Select A Folder or Click Here</a>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+                {% for image in data %}
+                <div class="col-md-3 mx-auto mt-4 ">
+                    <a class="card shadow-lg rounded bg-white text-decoration-none" href="/classify?p={{image.0}}">
+                        <div class="card-body ">
+                            <i class="fa fa-folder fa-5x text-warning" aria-hidden="true"></i>
+                        </div>
+                        <div class="card-footer bg-warning">
+                            <p class="lead m-0 ">{{image.1}}</p>
+                        </div>     
+                    </a>  
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                
+            </div>
+        </main>
+    </div>
+    
+    {% endblock %}
+    {% block css %}
+    <style>
+        
+    </style>
+    {% endblock %}
+    {% block js %}
+    <script>
+        
+        
+        
+        
+    </script>
+    {% endblock %}

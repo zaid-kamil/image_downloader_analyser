@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+    </div>
+
+</div>
+<div class="container">
+    <main>
+        <div class="row">
+            <div class="col-md-12 text-center mt-4">
+                <h1>Collection of Images</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab ad alias cumque deleniti dignissimos
+                    ducimus
+                    ea esse illo iure laudantium maiores minus numquam quae quasi reprehenderit saepe, suscipit, unde
+                    veritatis.</p>
+            </div>
+            <div class="col-md-12 text-center mt-2 ">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success">Classify</button>
+                    <button type="button" class="btn btn-warning">Direct Download</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-10 mx-auto mt-2 ">
+                <div class="card-columns">
+
+                    {% for image in images %}
+                    <div class="card">
+                        <img src="{{image.0}}"
+                             class="card-img-top img-fluid"
+                             alt="{{image.1}}" title="{{image.1}}">
+                        <div class="card-footer" style="background:rgba(0,0,0,0);"><a href="{{image.0}}" target="_blank" download="{{image.1}}"><i class="fa fa-download"></i> <span>{{image.1}}</span></a></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+{% block css %}
+<style>
+
+</style>
+{% endblock %}
+{% block js %}
+<script>
+
+
+
+
+</script>
+{% endblock %}

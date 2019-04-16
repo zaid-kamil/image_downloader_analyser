@@ -1,0 +1,205 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron mt-5">
+        <h1 class="display-4">Image Downloader App!</h1>
+        <p class="lead">This is a simple app unit, a simple web-style component for calling extra attention to
+            featured content or information.
+        </p>
+        <hr class="my-4">
+        <p>Search Images using item names</p>
+        <form method="post">
+            <div class="input-group mb-3 input-group-lg ">
+                <input type="text" name="query" class="form-control query" placeholder="flowers,balloon,surroundings etc"
+                aria-label="image query" aria-describedby="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary btn-lg" id="search">
+                        <i class="fa fa-search" style="color:#000"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3 input-group-lg ">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="quality">Image Quality</label>
+                        </div>
+                        <select class="custom-select" name="quality" id="quality">
+                            <option selected>Choose...</option>
+                            <option value="medium">medium</option>
+                            <option value="large">large</option>
+                            <option value=">400*300">greater than 400*300</option>
+                            <option value=">640*480">greater than 640*480</option>
+                            <option value=">1024*768">greater than 1024*768</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3 input-group-lg">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="qty">No. of Images</label>
+                        </div>
+                        <select class="custom-select" name="qty" id="qty">
+                            <option selected>Choose...</option>
+                            {% for i in range(1,100) %}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                            
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="input-group mb-3 input-group-lg">
+                        <button type="" name="" id="" class="btn btn-danger btn-block btn-lg" btn-lg btn-block">Start</button>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <p class="lead text-danger"><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>   A large number of image download can take time for the scraper to run
+                </div>
+            </div>      
+        </form>
+        <button class="next btn btn-success btn-lg" style="display:none">
+            Images Collected, click next to View &nbsp <i class="fa fa-chevron-right" style="font-size:smaller"></i>
+        </button>
+    </div>
+    <div class="overlay" style="display:none">
+        <div class="wrap col-md-12 mt-4 ">
+            <div style="color: wheat;background: #57929e;" class="text-center alert alert-primary" role="alert">
+                <h3> We are collecting the images from scraper, please wait or have a cup of tea.</h3>
+            </div>
+            <div class="circle"></div>
+        </div>
+    </div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" >
+    
+    <linearGradient id="background" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop id="one" offset="0%" stop-color="crimson"/>
+        <stop id="two" offset="100%" stop-color="cyan"/>
+    </linearGradient>
+    
+    <rect id="rect" width="100%" height="100%" fill="url(#background)"/>
+    
+</svg>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/loader.css">
+<style>
+    body{
+        background-image:#99009f;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    svg {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: -99;
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    .textto-title {
+        font-family: 'Playball', cursive;
+        font-size: 40px;
+        fill: snow;
+    }
+    
+    .texto-by {
+        font-family: 'Open Sans Condensed', sans-serif;
+        font-size: 12px;
+        fill: snow;
+        letter-spacing: 1px;
+        opacity: .8;
+    }
+    
+</style>
+{% endblock %}
+{% block js %}
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/velocity/0.11.9/jquery.velocity.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('form').submit(function(event){
+            $('.overlay').fadeIn();
+            $.ajax({
+                url:'/',
+                type:'POST',
+                data:{
+                    'query':$('.query').val(),
+                    'size':$('#quality').val(),
+                    'limit':$('#qty').val()
+                },
+                success:function(e){
+                    $('.overlay').fadeOut();
+                    $('.next').fadeIn('fast',function () {
+                        console.log(e.folder);
+                        $(this).attr('data-folder',e.folder);
+                    });
+                },
+                error:function(e){
+                }
+            });
+            event.preventDefault();
+            
+        });
+        
+        $('.next').click(function(){
+            folder=$(this).attr('data-folder');
+            console.log(folder);
+            window.location.href = '/savedimages?f='+folder;
+        });
+        
+        $("#texto")
+        .delay(10500)
+        .velocity({x: 70 },{duration:500, easing: "easeInSine"});
+        
+        $("#group")
+        .delay(10500)
+        .velocity({opacity: 1 },{duration:2000, easing: "ease-in"});
+        
+        
+        $("#background")
+        .delay(500)
+        .velocity({x2: "100%", y2: "0%" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({x2: "0%", y2: "100%" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({x1: "50%", y2: "0%" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({x1: "0%", y2: "100%" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({x2: "100%", y2: "0%" },{duration:1500, easing: "linear"});
+        
+        
+        $("#one")
+        .delay(1500)
+        .velocity({stopColor: "#FF4E50" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({stopColor: "#556270" },{duration:1500, easing: "swing"})
+        .delay(500)
+        .velocity({stopColor: "#F0C27B" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({stopColor: "#000000" },{duration:1500, easing: "swing"})
+        .delay(500)
+        .velocity({stopColor: "#ED4264" },{duration:1500, easing: "linear"});
+        
+        $("#two")
+        .delay(1500)
+        .velocity({stopColor: "#F9D423" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({stopColor: "#FF6B6B" },{duration:1500, easing: "swing"})
+        .delay(500)
+        .velocity({stopColor: "#4B1248" },{duration:1500, easing: "linear"})
+        .delay(500)
+        .velocity({stopColor: "#e74c3c" },{duration:1500, easing: "swing"})
+        .delay(500)
+        .velocity({stopColor: "#FFEDBC" },{duration:1500, easing: "linear"});
+    });
+    
+    
+</script>
+{% endblock %}

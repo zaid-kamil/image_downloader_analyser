@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+import scrapy
+
+class ExampleSpider(scrapy.Spider):
+    name = "wallpaper"
+
+    def start_requests(self):
+        urls = [
+            'https://www.pexels/'
+        ]
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse)
+
+            def parse(self, response):
+
+                print( response.url, response.body)
+
+    def parse(self, response):
+        page = response.url.split("/")[-2]
+        filename = 'wallpaper-%s.html' % page
+        with open(filename, 'wb') as f:
+            f.write(response.body)
+        self.log('Saved file %s' % filename)
+        for wallpapers in response.css('div.quote'):
+            yield {
+                'text': wallpapers.css('span.text::text').get(),
+                'author': wallpapers.css('small.author::text').get(),
+                'tags': wallpapers.css('div.tags a.tag::text').getall(),
+            }
+
